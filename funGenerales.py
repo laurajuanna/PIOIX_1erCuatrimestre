@@ -32,8 +32,8 @@ def continuarPartida(idPartida):
 
 
 def preguntaCorta(idPartida):
-    print("Desea continuar la partida? Presione:")
-    opcion = input("ENTER para continuar / 1 para más opciones: ")
+    print("Presione -> ENTER para CONTINUAR la partida.")
+    opcion = input("Presione -> 1 para GUARDAR la partida: ")
     if opcion == "1":
         print("")
         continuarPartida(idPartida)
@@ -58,12 +58,12 @@ def nuevaPartida():
           ' La partida fue guardada con el Nombre:',nombrePartida)
     for turno in range(0,11):
         nroTurno = (turno + 1)
-        print("\n* Turno número",str(turno + 1)," *\n")
+        print("\n------------------------ * TURNO NÚMERO ",str(turno+1), " * ------------------------\n")
         for a in range(0, cantidad):
             nombreJugador = (jugadores[a])
             idJugador = funcionesbd.buscarIdJugador(nombreJugador)
             idPuntaje = funcionesbd.buscarIdPuntaje(idPartida, idJugador)
-            print(">>> Debe tirar el jugador Número", (a + 1), ":", (jugadores[a]), "<<<")
+            print("------------>>> Debe tirar el jugador Número", (a + 1), ":", (jugadores[a]), "<<<------------")
             desglosar = tiro.programa_principal(idPuntaje)
             puntos = desglosar[0]  # recibe el elemento 1 guardado en la tupla que equivale a los puntos obtenidos
             categoria = desglosar[1]  # lo mismo que la anterior, recibe la categoria obtenida
@@ -116,7 +116,7 @@ def ejecutarReanudar(idPartida):
                 pass
         siguienteJug = 0
         print("")
-        print("* Resultados Finales del Turno Nro", (turno), "*\n")
+        print("------------ * Resultados Finales del Turno Nro", (turno), "* ------------\n")
         tablero.mostrarPuntajeParcial()
     tablero.sumaPuntajeFinal(cantidad,tablero.puntajeParcial)
     tablero.mostrarGanador(tablero.puntajeParcial,cantidad,tablero.jugadores)

@@ -327,20 +327,17 @@ def buscarTurnosGuardado(idPartida):#define los nros de turnos guardados
             turnosGuardados.append(valor)
     return turnosGuardados
 
-def siguienteJug(turnosGuardados):
+def siguienteJug(turnosGuardados):#Devuelve que jugador debe seguir al reanudar una partida
     ordenJug = []
-    #print(ordenJug)
     turnoMax = max(turnosGuardados)
-    #print(turnoMax)
-    #print("cantidad en turnos guardados",len(turnosGuardados))
+    turnoMin = min(turnosGuardados)
     for m in range (0,len(turnosGuardados)):
         valor = turnosGuardados[m]
         if turnoMax == valor:
             ordenJug.append(0)
-        else:
+        elif valor < turnoMax:
             ordenJug.append(m)
-    #print(ordenJug)
-    #print(max(ordenJug))
+            break
     siguiente = (max(ordenJug))
     return siguiente
 

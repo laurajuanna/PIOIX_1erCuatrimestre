@@ -19,7 +19,9 @@ def tirar_dados(dados):
 
 # Ésta función le explica al usuario cómo proceder,
 # pide que elija el procedimiento a seguir y devuelve esa elección
-def elegirProcedimiento():
+def elegirProcedimiento(idPuntaje):
+    disponibles = funcionesbd.buscarPuntajeJugador(idPuntaje)
+    print("\n--- Usted puede anotarse éstas categorías:\n--> "+disponibles)
     print("\nDesea tirar otra vez? Presione:\n- P para ver los resultados parciales.\n- V para volver a tirar todos los dados."
           "\n- E para elegir qué dados tirar.\n- T para terminar y quedarse con la tirada obtenida.\n")
     procedElegido = input("Por favor, ingrese su elección: ")
@@ -312,7 +314,7 @@ def pregunta_QueAnotar():
 # se imprime qué número de tirada es y avisa que "va a obtener los siguientes dados"
 # y finalmente devuelve el valor de la nueva tirada con los valores de los 5 dados.
 def modificarDados():
-    dadosAtirar = input("\nIngrese los dados a cambiar separados por comas: ")
+    dadosAtirar = input("\nIngrese los dados a cambiar separados por coma (por Nro. De Órden del 1-6): ")
     lista_dados_cambiados = dadosAtirar.split(",")
     esValido = False
     while esValido == False:
@@ -322,7 +324,12 @@ def modificarDados():
                 esValido = True
         except ValueError:
             print("\n*** ERROR!! Lo ingresado no es válido.")
-            print("Ingrese un NÚMERO de dado (Ejemplo: 1) o VARIOS separados por coma (Ejemplo: 5,2,3)")
+            print("Ingrese el NÚMERO de Órden del dado (Ejemplo: 1) o VARIOS separados por coma (Ejemplo: 1,2,3)")
+            dadosAtirar = input("\nIngrese los dados a cambiar separados por comas: ")
+            lista_dados_cambiados = dadosAtirar.split(",")
+        except IndexError:
+            print("\n*** ERROR!! Lo ingresado no es válido.")
+            print("Ingrese el NÚMERO de Órden del dado (Ejemplo: 1) o VARIOS separados por coma (Ejemplo: 1,2,3)")
             dadosAtirar = input("\nIngrese los dados a cambiar separados por comas: ")
             lista_dados_cambiados = dadosAtirar.split(",")
     global contadorTiradas
@@ -340,8 +347,8 @@ def modificarDados():
 # a la función (definiciones(dados)) para definir que puntuación anotará el tablero
 def programa_principal(idPuntaje):
     ref_opciones = {"T": aceptarTirada, "V": tirarTodoNuevo, "E": modificarDados, "P": '' }
-    print("\n*** La tirada número",contadorTiradas,"obtuvo los siguientes dados:",tirar_dados(dados))
-    while contadorTiradas != 3 and elegirProcedimiento() != "T":
+    print("\n*** La tirada número",contadorTiradas,"obtuvo los siguientes dados:\n",tirar_dados(dados))
+    while contadorTiradas != 3 and elegirProcedimiento(idPuntaje) != "T":
         if opcionElegida == "P":
             print("\n* Estos son los resultados parciales *\n")
             tablero.mostrarPuntajeParcial()

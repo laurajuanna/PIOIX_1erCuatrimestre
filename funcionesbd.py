@@ -291,11 +291,29 @@ def buscarJugadoresGuardados(idPartida): # Devuelve el ID del jugador segun el n
     return nombres
 
 
-def buscarPuntajeGuardado(idPartida):
+def buscarPuntajeGuardado(idPartida): #busca todos los puntajes asociados a una partida
     sentencia = ('SELECT "1", "2", "3", "4", "5", "6", "E", "F", "P", "G", "GD" FROM PUNTAJES WHERE ID_PARTIDA = ?;')
     c.execute(sentencia,[idPartida])
     busqueda = c.fetchall()
     return busqueda
+
+
+def buscarPuntajeJugador(idPuntaje): #busca los puntajes asociados a un jugador y devuelve las cat disponibles para anotar/tachar
+    sentencia = ('SELECT "1", "2", "3", "4", "5", "6", "E", "F", "P", "G", "GD" FROM PUNTAJES WHERE ID_PUNTAJE = ?;')
+    c.execute(sentencia,[idPuntaje])
+    busqueda = ((c.fetchall())[0])
+    categTotales = ["1", "2", "3", "4", "5", "6", "E", "F", "P", "G", "GD"]
+    categDisponibles = []
+    for m in range(0,len(busqueda)):
+        puntos = busqueda[m]
+        categoria = categTotales[m]
+        if (type(puntos)) != int:
+            categDisponibles.append(categoria)
+    disponibles = ""
+    for i in categDisponibles:
+        disponibles += str(i)+", "
+    disponibles = disponibles[:-2]
+    return disponibles
 
 
 def formatoTablero(busqueda):
@@ -312,6 +330,19 @@ def formatoTablero(busqueda):
                 orden.append(valores)
         forTablero.append(orden)
     return forTablero
+
+# ESTA FUNCION NO LA USO PARA NADA AUN, SUMA TODOS LOS PUNTAJES DE C/ JUGADOR y DEVUELVE UNA LISTA CON CADA RESULTADO
+def sumarPuntajes(idPartida):
+    puntuaciones = buscarPuntajeGuardado(idPartida)
+    resultados = []
+    for m in range(0, len(puntuaciones)):
+        puntos = puntuaciones[m]
+        suma = 0
+        for p in range(0, len(puntos)):
+            valor = puntos[p]
+            suma = suma + valor
+        resultados.append(suma)
+    return resultados
 
 
 def buscarTurnosGuardado(idPartida):#define los nros de turnos guardados

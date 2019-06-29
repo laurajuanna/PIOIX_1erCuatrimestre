@@ -2,7 +2,8 @@ import funGenerales
 
 # -------- LO QUE ME FALTA HACER -----------------
 
-# PROGRAMAR EMPATES CON LA LISTA QUE DIJO NICO --> NO ENTIENDO COMO HACERLO. NO HAY FORMA.
+# YA ESTA PROGRAMADO LO DE LA DETECCIÓN DE EMPATES
+# ME FALTARIA EMPROLIJAR TODO Y ORDENAR ALGUNAS COSAS
 
 # ------------------------------------------------
 

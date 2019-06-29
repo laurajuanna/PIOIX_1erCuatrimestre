@@ -88,7 +88,12 @@ def nuevaPartida():
         print("* Resultados Finales del Turno Nro",(turno+1),"*\n")
         tablero.mostrarPuntajeParcial() # al finalizar el turno muestra el tablero con los puntajes parciales
     tablero.sumaPuntajeFinal(cantidad,puntajeParcial) # al finalizar los 11 turnos suma todos los puntos obtenidos
-    tablero.mostrarGanador(puntajeParcial,cantidad,jugadores) # Muestra los ganadores en orden
+    cadenaResultados = (" RESULTADOS FINALES ")
+    print("\n" + (cadenaResultados.center(50, "*") + "\n"))
+    puestos = tablero.puestos(tablero.puntajeParcial)
+    puntajes = tablero.ganador(jugadores, tablero.puntajeParcial)
+    tablero.clasificados(puestos, puntajes)
+    print("\n Partida finalizada. Muchas gracias por jugar!")
     funcionesbd.cerrarBase()# Cierra la BD
 
 
@@ -130,8 +135,14 @@ def ejecutarReanudar(idPartida):
         print("------------ * Resultados Finales del Turno Nro", (turno), "* ------------\n")
         tablero.mostrarPuntajeParcial()
     tablero.sumaPuntajeFinal(cantidad,tablero.puntajeParcial)
-    tablero.mostrarGanador(tablero.puntajeParcial,cantidad,tablero.jugadores)
+    cadenaResultados = (" RESULTADOS FINALES ")
+    print("\n" + (cadenaResultados.center(50, "*") + "\n"))
+    puestos = tablero.puestos(tablero.puntajeParcial)
+    puntajes = tablero.ganador(jugadores, tablero.puntajeParcial)
+    tablero.clasificados(puestos,puntajes)
+    print("\n Partida finalizada. Muchas gracias por jugar!")
     funcionesbd.cerrarBase()
+
 
 def reanudarPartida(): #Muestra las partidas guardadas y permite elegir cual reanudar
     resultado = funcionesbd.buscarPartidaGuardada()

@@ -74,14 +74,43 @@ def anotacion (nroJugador,categoria,puntos):# Esto es para anotar los puntos en 
 def mostrarPuntajeParcial():#Esto muestra el tablero con los resultados parciales
     print(tabulate(puntajeParcial, jugadores))
 
-def mostrarGanador (puntajeParcial,cantidad,jugadores):#Muestra que jugador ganó y con cuantos púntos
-    listaPuntos = (puntajeParcial[11])
-    soloPuntos = (puntajeParcial[11][1:])
-    puntajeOrdenado = (sorted(soloPuntos,reverse=True))
-    cadenaResultados = (" RESULTADOS FINALES ")
-    print("\n" + (cadenaResultados.center(50, "*") + "\n"))
-    for i in range(0,len(puntajeOrdenado)):
-        ganador = (puntajeOrdenado[i])
-        if ganador in listaPuntos:
-            ordenGanadores = listaPuntos.index(ganador)
-            print("En ", i + 1, "puesto: ", (str(jugadores[ordenGanadores - 1])), "con ", ganador, "puntos")
+# TDO LO DE ABAJO ES NUEVO
+
+def ganador (jugadores,puntajeParcial): #Devuelve una lista de jugadores asociados a cada puntaje obtenido
+    puntos = (puntajeParcial[11][1:])
+    puntos2 = puntos
+    ganadores = []
+    puntajeOrdenado = (sorted(puntos, reverse=True))
+    for no in range(0,len(puntajeOrdenado)):
+        ro = puntajeOrdenado[no]
+        if ro in puntos2:
+            orden = puntos2.index(ro)
+            del puntos2[orden]
+            puntos2.insert(orden,-1)
+            ganadores.insert(orden,[jugadores[orden],ro])
+    return ganadores
+
+
+def puestos(puntajeParcial): #devuelve el orden de puestos x puntaje
+    puestos = []
+    puntos = (puntajeParcial[11][1:])
+    puntajeOrdenado = (sorted(puntos, reverse=True))
+    for nro in puntajeOrdenado:
+        if nro not in puestos:
+            puestos.append(nro)
+    return puestos
+
+
+def clasificados(puestos,puntajes): # Imprime el podio de ganadores por orden, detecta empates.
+    cadena = []
+    for ele in puntajes:
+        tupla = ele
+        nombre = tupla[0]
+        puntos = tupla[1]
+        if puntos in puestos:
+            orden = puestos.index(puntos)
+            asi = ("En "+str(orden+1)+" puesto: "+nombre+" con "+str(puntos)+" puntos.")
+        cadena.append(asi)
+    resultado = (sorted(cadena))
+    for eme in resultado:
+        print(eme)

@@ -59,7 +59,7 @@ def nuevaPartida():
     cantidad = tablero.ingresoCantidadJug()  # llama a la función para preguntar y guarda el valor de la cantidad de jugadores
     tablero.ingresoNombres(cantidad)  # llama a la funcion para agregar los nombres a la lista de jugadores y sumarlos al tablero
     tablero.insertarColumnas(cantidad)  # suma espacios vacios a la lista del tablero segun la cantidad de jugadores
-    nombrePartida = input("Ingrese el nombre de la partida: ")
+    nombrePartida = funcionesbd.validarPartida()
     funcionesbd.guardarJugadores(cantidad, jugadores)  # Inserta nombres en la tabla Jugadores de la BASE DE DATOS
     funcionesbd.nuevaPartida(nombrePartida)  # Inserta el nombre de partida, fecha y hora en la tabla Partida de la BD
     funcionesbd.ingresoApuntajes(jugadores, nombrePartida) # Inserta los anteriores datos en la tabla Puntajes de la BD

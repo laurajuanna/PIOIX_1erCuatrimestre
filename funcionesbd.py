@@ -59,7 +59,6 @@ def buscarIdPartida(nombrePartida): # Devuelve el ID de la partida a partir del 
     base.commit()
     return idPartida
 
-
 def buscarIdJugador(nombreJugador): # Devuelve el ID del jugador segun el nombre del jugador en la lista Jugadores
     sentencia = ("SELECT ID_JUGADOR FROM JUGADORES WHERE NOMBRE_JUGADOR = ?;")
     c.execute(sentencia,[nombreJugador])
@@ -244,6 +243,30 @@ def guardarPuntuacion(categoria,nroTurno,puntos,idPuntaje):#Anota el Nro de turn
         c.execute(sentencia, [nroTurno, puntos, idPuntaje])
     base.commit()
 
+def buscarNombrePartida():
+    sentencia = ('SELECT NOMBRE_PARTIDA FROM PARTIDA;')
+    c.execute(sentencia)
+    busqueda = c.fetchall()
+    return busqueda
+
+def validarPartida():
+    partidas = buscarNombrePartida()
+    guardadas = []
+    for m in partidas:
+        elemento = (m[0])
+        elemento = elemento.lower()
+        guardadas.append(elemento)
+    esValido = False
+    while esValido == False:
+        ingreso = input("Ingrese nombre de partida: ")
+        ingreso = ingreso.lower()
+        if ingreso in guardadas:
+            print("*** Error! Ese nombre ya está guardado en el sistema.")
+        else:
+            print("Su partida ha sido guardada.")
+            ingreso = ingreso.capitalize()
+            esValido = True
+    return ingreso
 
 def buscarPartidaGuardada():#Muestra las partidas guardadas, permite elegir cual reanudar y devuelve el ID_PARTIDA asociado a ella
     sentencia = ('SELECT * FROM PARTIDA')

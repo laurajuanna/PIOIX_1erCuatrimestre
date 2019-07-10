@@ -4,7 +4,7 @@ import sqlite3
 base = sqlite3.connect('puntajes.db')
 c = base.cursor()
 
-
+# Sirve para ejecutar consultar a la BD más adelante
 def ejecutar_query(query):
    c.execute(query)
    base.commit()
@@ -243,30 +243,30 @@ def guardarPuntuacion(categoria,nroTurno,puntos,idPuntaje):#Anota el Nro de turn
         c.execute(sentencia, [nroTurno, puntos, idPuntaje])
     base.commit()
 
-def buscarNombrePartida():
+def buscarNombrePartida(): # Busca y devuelve todos los nombres de las partidas guardadas
     sentencia = ('SELECT NOMBRE_PARTIDA FROM PARTIDA;')
     c.execute(sentencia)
     busqueda = c.fetchall()
     return busqueda
 
-def validarPartida():
-    partidas = buscarNombrePartida()
+def validarPartida(): # Sirve para ingresar un nombre nuevo de partida sin que éste coincida con algun nombre guardado en las partidas guardadas de la BD
+    partidas = buscarNombrePartida() # invoca la funcion buscarNombrePartida y recibe la lista de partidas guardadas
     guardadas = []
-    for m in partidas:
+    for m in partidas: # itera cada elemento y lo pasa a minusculas para evitar que no coincidan con la futura busqueda por errores de tipeo
         elemento = (m[0])
         elemento = elemento.lower()
-        guardadas.append(elemento)
+        guardadas.append(elemento) # despues de pasar a minusculas agrega cada nombre en otra lista llamada "guardadas"
     esValido = False
     while esValido == False:
         ingreso = input("Ingrese nombre de partida: ")
-        ingreso = ingreso.lower()
+        ingreso = ingreso.lower() # Pasa el nombre ingresado por el usuario a minusculas para que la búsqueda coincida con las de la lista "guardadas"
         if ingreso in guardadas:
-            print("*** Error! Ese nombre ya está guardado en el sistema.")
+            print("*** Error! Ese nombre ya está guardado en el sistema.") # Si encuentra coincidencia devuelve error y regresa al ciclo while
         else:
-            print("Su partida ha sido guardada.")
-            ingreso = ingreso.capitalize()
-            esValido = True
-    return ingreso
+            print("Su partida ha sido guardada.") 
+            ingreso = ingreso.capitalize()# Si el nombre ingresado no coincide con los anteriormente guardados en la BD pasa el ingreso a "tipo título" (Capitalize)
+            esValido = True # Corta el ciclo while
+    return ingreso # Devuelve el nombre ingresado por el uuario
 
 def buscarPartidaGuardada():#Muestra las partidas guardadas, permite elegir cual reanudar y devuelve el ID_PARTIDA asociado a ella
     sentencia = ('SELECT * FROM PARTIDA')
@@ -338,7 +338,8 @@ def buscarPuntajeJugador(idPuntaje): #busca los puntajes asociados a un jugador 
     disponibles = disponibles[:-2]
     return disponibles
 
-
+# recibe de parametro una lista de puntos asociados a la partida (busqueda) obtenidos de la bd con la funcion buscarPuntajeGuardado
+# luego transforma esa lista de puntajes obtenida de la BD al formato necesario para crear el tablero
 def formatoTablero(busqueda):
     forTablero = []
     for m in range(0,len(busqueda)):
@@ -353,19 +354,6 @@ def formatoTablero(busqueda):
                 orden.append(valores)
         forTablero.append(orden)
     return forTablero
-
-# ESTA FUNCION NO LA USO PARA NADA AUN, SUMA TODOS LOS PUNTAJES DE C/ JUGADOR y DEVUELVE UNA LISTA CON CADA RESULTADO
-def sumarPuntajes(idPartida):
-    puntuaciones = buscarPuntajeGuardado(idPartida)
-    resultados = []
-    for m in range(0, len(puntuaciones)):
-        puntos = puntuaciones[m]
-        suma = 0
-        for p in range(0, len(puntos)):
-            valor = puntos[p]
-            suma = suma + valor
-        resultados.append(suma)
-    return resultados
 
 
 def buscarTurnosGuardado(idPartida):#define los nros de turnos guardados
@@ -406,13 +394,15 @@ def turnoSiguiente(turnosGuardados):#define que nro de turno sigue
         turno = maximo
     return turno
 
-
+# Esta funcion devuelve el id de los jugadores segun el id de partida asociado a su nombre
 def borrarJugadores(idPartida):
     sentencia = ('SELECT ID_JUGADOR FROM PUNTAJES WHERE ID_PARTIDA = ?;')
     c.execute(sentencia,[idPartida])
     busqueda = c.fetchall()
     return busqueda
 
+# Esta funcion sirve para borrar los jugadores, puntajes y partidas asociados a un id de partida
+#  en el caso de que los jugadores elijan borrar la partida
 def borrarPartida(idPartida):
     busqueda = borrarJugadores(idPartida)
     sentencia = ('DELETE FROM PUNTAJES WHERE ID_PARTIDA = ?;')

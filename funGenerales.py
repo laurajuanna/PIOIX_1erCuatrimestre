@@ -89,11 +89,11 @@ def nuevaPartida():
         tablero.mostrarPuntajeParcial() # al finalizar el turno muestra el tablero con los puntajes parciales
     tablero.sumaPuntajeFinal(cantidad,puntajeParcial) # al finalizar los 11 turnos suma todos los puntos obtenidos
     cadenaResultados = (" RESULTADOS FINALES ")
-    print("\n" + (cadenaResultados.center(50, "*") + "\n"))
-    puestos = tablero.puestos(tablero.puntajeParcial)
-    puntajes = tablero.ganador(jugadores, tablero.puntajeParcial)
-    tablero.clasificados(puestos, puntajes)
-    print("\n Partida finalizada. Muchas gracias por jugar!")
+    print("\n" + (cadenaResultados.center(50, "*") + "\n")) # Imprime la cadena de texto "Resultados finales" centrada
+    puestos = tablero.puestos(tablero.puntajeParcial) # guarda en esta variable la lista de puestos (sin repeticiones)
+    puntajes = tablero.puntajesFinales(jugadores, tablero.puntajeParcial) # asocia la variable a una lista con tuplas dentro con el nombre de jugador y puntaje final
+    tablero.clasificados(puestos, puntajes) # Finalmente imprime el podio de ganadores por órden, detectando empates.
+    print("\nPartida finalizada. Muchas gracias por jugar!")
     funcionesbd.cerrarBase()# Cierra la BD
 
 
@@ -138,9 +138,9 @@ def ejecutarReanudar(idPartida):
     cadenaResultados = (" RESULTADOS FINALES ")
     print("\n" + (cadenaResultados.center(50, "*") + "\n"))
     puestos = tablero.puestos(tablero.puntajeParcial)
-    puntajes = tablero.ganador(jugadores, tablero.puntajeParcial)
+    puntajes = tablero.puntajesFinales(jugadores, tablero.puntajeParcial)
     tablero.clasificados(puestos,puntajes)
-    print("\n Partida finalizada. Muchas gracias por jugar!")
+    print("\nPartida finalizada. Muchas gracias por jugar!")
     funcionesbd.cerrarBase()
 
 

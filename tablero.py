@@ -20,7 +20,7 @@ def ingresoNombres (cantidad):#Esta función sirve para agregar los nombres de l
     for cantidad in range(0, cantidad):
         jugadores.append(input("Por favor, ingrese el nombre del jugador: "))
 
-def reanudarNombres (nombres):
+def reanudarNombres (nombres): # Agrega una lista de nombres obtenida de la BD Guardada a la lista de nombres del tablero
     for m in range(0,len(nombres)):
         jugadores.append(nombres[m])
 
@@ -29,7 +29,7 @@ def insertarColumnas (cantidad):#Sirve para agregar X cantidad de "espacios" agr
         for posiciones in range (0,12):#Estos son los doce "vagones"
             puntajeParcial[posiciones].append('')#acá agrega el valor 0 en el vagón X(cambia según la iteración)AL TERMINAR DE PROGRAMAR TOD HAY QUE CAMBIAR EL 0 por UN espacio vacio
 
-def reanudarColumnas(cantidad,forTablero):
+def reanudarColumnas(cantidad,forTablero): # Con los datos obtenidos de la BD crea el tablero
     for c in range (0,cantidad):
         for pos in range(0,11):
             valores = (forTablero[c][pos])
@@ -74,43 +74,42 @@ def anotacion (nroJugador,categoria,puntos):# Esto es para anotar los puntos en 
 def mostrarPuntajeParcial():#Esto muestra el tablero con los resultados parciales
     print(tabulate(puntajeParcial, jugadores))
 
-# TDO LO DE ABAJO ES NUEVO
 
-def ganador (jugadores,puntajeParcial): #Devuelve una lista de jugadores asociados a cada puntaje obtenido
-    puntos = (puntajeParcial[11][1:])
-    puntos2 = puntos
-    ganadores = []
-    puntajeOrdenado = (sorted(puntos, reverse=True))
-    for no in range(0,len(puntajeOrdenado)):
-        ro = puntajeOrdenado[no]
-        if ro in puntos2:
-            orden = puntos2.index(ro)
-            del puntos2[orden]
-            puntos2.insert(orden,-1)
-            ganadores.insert(orden,[jugadores[orden],ro])
-    return ganadores
+def puntajesFinales (jugadores, puntajeParcial): #Devuelve una lista con otras listas dentro que asocia en cada una un nombre de jugador y el puntaje que obtuvo al finalizar el juego.
+    puntuacion = (puntajeParcial[11][1:])
+    puntuacionDuplicada = puntuacion # Esta lista está duplicada para que, más adelante, no se reemplacen los puntos obtenidos en la lista original.
+    nombrePuntos = []
+    puntajeOrdenado = (sorted(puntuacion, reverse=True)) # Ordena los puntajes obtenidos de mayor a menor
+    for nro in range(0,len(puntajeOrdenado)):
+        punto = puntajeOrdenado[nro] # Asocia la variable "punto" a cada puntaje (desde el puntaje maximo al minimo) uno cada vez.
+        if punto in puntuacionDuplicada: # Si el valor de "punto" se encuentra en la puntuacionDuplicada realiza las siguientes acciones
+            orden = puntuacionDuplicada.index(punto) # Encuentra el número de indice donde está ubicada esa puntuación en la lista puntuacionDuplicada y la asocia a la variable "orden"
+            del puntuacionDuplicada[orden] # Usando el numero de indice obtenido en la variable orden lo borra de la lista duplicada.
+            puntuacionDuplicada.insert(orden,-1) #Luego lo agrega nuevamente en esa misma ubicación pero reemplazandolo por -1 (para evitar que no capte los numeros por repetición)
+            nombrePuntos.insert(orden,[jugadores[orden],punto])# Agrega en la lista "ganadores" en el nro de órden indicado una tupla con el nombre del jugador y el puntaje que obtuvo.
+    return nombrePuntos # Devuelve una lista con tuplas dentro que contienen nombre de jugador y puntaje obtenido.
 
 
 def puestos(puntajeParcial): #devuelve el orden de puestos x puntaje
     puestos = []
     puntos = (puntajeParcial[11][1:])
-    puntajeOrdenado = (sorted(puntos, reverse=True))
+    puntajeOrdenado = (sorted(puntos, reverse=True)) # Toma los puntos obtenidos y los ordena de mayor a menos
     for nro in puntajeOrdenado:
-        if nro not in puestos:
-            puestos.append(nro)
-    return puestos
+        if nro not in puestos: # Si no esta en la lista "puestos" (Vacia en un comienzo) agrega a la misma, si ya está lo ignora y no lo suma
+            puestos.append(nro) # Lo que hace esta función es ignorar los puntajes repetidos para que haya un numero de puestos correspondientes a la puntuacion (no repetida) obtenida.
+    return puestos # Devuelve la cantidad de puestos reales, sin repeticiones
 
 
-def clasificados(puestos,puntajes): # Imprime el podio de ganadores por orden, detecta empates.
-    cadena = []
-    for ele in puntajes:
-        tupla = ele
-        nombre = tupla[0]
-        puntos = tupla[1]
+def clasificados(puestos,puntajes): # Recibe cantidad de puestos y puntaje de cada jugador asociado a su nombre. Finalmente imprime el podio de ganadores por orden y detecta los empates.
+    cadenasFinales = []
+    for elemento in puntajes:
+        nombrePuntos = elemento # Recibe cada elemento de la lista, mas abajo los separa en dos variables distintas de nombre y puntos
+        nombre = nombrePuntos[0] # variable de nombre con el elemento 0
+        puntos = nombrePuntos[1] # variable de puntos con el elemento 1
         if puntos in puestos:
-            orden = puestos.index(puntos)
-            asi = ("En "+str(orden+1)+" puesto: "+nombre+" con "+str(puntos)+" puntos.")
-        cadena.append(asi)
-    resultado = (sorted(cadena))
-    for eme in resultado:
-        print(eme)
+            orden = puestos.index(puntos) # Si los puntos de la variable puntos estan en la lista de puestos devuelve el nro de indice dentro de la variable orden
+            texto = ("En "+str(orden+1)+" puesto: "+nombre+" con "+str(puntos)+" puntos.") # Acá arma una cadena de texto con el nro de orden de puesto, el nombre del jugador y los puntos obtenidos.
+        cadenasFinales.append(texto) # Agrega la cadena de la variable "texto" a la lista "cadenaFinales"
+    resultado = (sorted(cadenasFinales)) # Crea una nueva lista con todas las cadenas finales ordenadas de menor a mayor (Puesto 1, puesto 2,etc) tomando como paramatro de orden el nro de puesto
+    for cadena in resultado: # finalmente imprime cada elemento de la lista de resultados
+        print(cadena)

@@ -2,8 +2,10 @@ from tabulate import tabulate
 
 jugadores = []
 puntajeParcial = [['1'],['2'],['3'],['4'],['5'],['6'],['E'],['F'],['P'],['G'],['GD'],['']]
+# El último valor vacío en la lista anterior (puntajeParcial) es el lugar donde, al finalizar el juego,
+# se agregará la suma de los puntos obtenidos por cada jugador, es decir, los resultados finales.
 
-def ingresoCantidadJug ():#Esta función es para obtener y retornar la cantidad de jugadores ingresada por el usuario.
+def ingresoCantidadJug ():# Esta función es para obtener y retornar la cantidad de jugadores ingresada por el usuario.
     cantidad = input("Por favor, ingrese la cantidad de jugadores: ")
     esValido = False
     while (esValido==False):# Lo que sigue sirve para validar errores de tipeo
@@ -27,15 +29,17 @@ def reanudarNombres (nombres): # Agrega una lista de nombres obtenida de la BD G
 def insertarColumnas (cantidad):#Sirve para agregar X cantidad de "espacios" agregando un 0 por cada jugador en cada "Vagón" de la lista puntajeParcial
     for t in range (0,cantidad):#Por ejemplo si ponemos 3 en cantidad se va a agregar 1 cero por iteración en los 12 vagones (de 1-6, E,F,P,G,GD y el espacio del resultado final)
         for posiciones in range (0,12):#Estos son los doce "vagones"
-            puntajeParcial[posiciones].append('')#acá agrega el valor 0 en el vagón X(cambia según la iteración)AL TERMINAR DE PROGRAMAR TOD HAY QUE CAMBIAR EL 0 por UN espacio vacio
+            puntajeParcial[posiciones].append('')# acá agrega un espacio vacío en el vagón nro X (cambia según la iteración)
 
-def reanudarColumnas(cantidad,forTablero): # Con los datos obtenidos de la BD crea el tablero
+def reanudarColumnas(cantidad,forTablero): # Con los datos obtenidos de la BD crea el tablero al REANUDAR una partida
     for c in range (0,cantidad):
         for pos in range(0,11):
             valores = (forTablero[c][pos])
             puntajeParcial[pos].append(valores)
         puntajeParcial[11].append('')
 
+# Esta función realiza la suma de puntos que obtuvo cada jugador y los agrega a la lista de puntajes parciales
+# para luego terminar mostrando el tablero con los resultados Finales
 def sumaPuntajeFinal(cantidad,puntajeParcial):# Se debe agregar esta función solo al final, porque si los valores están vacíos no se pueden sumar
     for nume in range(1, cantidad+1):# Debe estar completo el ingreso de los 11 valores por jugador, lo que no tenga completo se debe agregar 0
         resultado = ((puntajeParcial[0][nume])+(puntajeParcial[1][nume])+(puntajeParcial[2][nume])+
@@ -47,7 +51,10 @@ def sumaPuntajeFinal(cantidad,puntajeParcial):# Se debe agregar esta función so
     print("\n"+(cadenaPuntaje.center(50,"=")+"\n"))
     mostrarPuntajeParcial()
 
-def anotacion (nroJugador,categoria,puntos):# Esto es para anotar los puntos en el tablero
+
+# Esto es para anotar los puntos obtenidos en la lista "puntajeParcial" asociada al TABLERO
+# según el nroJugador que haya obtenido los puntos, la categoría y los puntos que obtuvo
+def anotacion (nroJugador,categoria,puntos):
     if categoria == 1:
         puntajeParcial[0][nroJugador] = puntos
     elif categoria == 2:
@@ -71,11 +78,14 @@ def anotacion (nroJugador,categoria,puntos):# Esto es para anotar los puntos en 
     elif categoria == 'GD':
         puntajeParcial[10][nroJugador] = puntos
 
+
 def mostrarPuntajeParcial():#Esto muestra el tablero con los resultados parciales
     print(tabulate(puntajeParcial, jugadores))
 
 
-def puntajesFinales (jugadores, puntajeParcial): #Devuelve una lista con otras listas dentro que asocia en cada una un nombre de jugador y el puntaje que obtuvo al finalizar el juego.
+# La siguiente función devuelve una lista con otras listas dentro
+# que asocia en cada una de ellas un nombre de jugador y el puntaje que obtuvo éste al finalizar el juego.
+def puntajesFinales (jugadores, puntajeParcial):
     puntuacion = (puntajeParcial[11][1:])
     puntuacionDuplicada = puntuacion # Esta lista está duplicada para que, más adelante, no se reemplacen los puntos obtenidos en la lista original.
     nombrePuntos = []
@@ -90,7 +100,8 @@ def puntajesFinales (jugadores, puntajeParcial): #Devuelve una lista con otras l
     return nombrePuntos # Devuelve una lista con tuplas dentro que contienen nombre de jugador y puntaje obtenido.
 
 
-def puestos(puntajeParcial): #devuelve el orden de puestos x puntaje
+# Devuelve el orden de puestos x puntaje
+def puestos(puntajeParcial):
     puestos = []
     puntos = (puntajeParcial[11][1:])
     puntajeOrdenado = (sorted(puntos, reverse=True)) # Toma los puntos obtenidos y los ordena de mayor a menos
@@ -100,7 +111,9 @@ def puestos(puntajeParcial): #devuelve el orden de puestos x puntaje
     return puestos # Devuelve la cantidad de puestos reales, sin repeticiones
 
 
-def clasificados(puestos,puntajes): # Recibe cantidad de puestos y puntaje de cada jugador asociado a su nombre. Finalmente imprime el podio de ganadores por orden y detecta los empates.
+# Recibe cantidad de puestos y puntaje de cada jugador asociado a su nombre.
+# Finalmente imprime el podio de ganadores por orden y detecta los empates.
+def clasificados(puestos,puntajes):
     cadenasFinales = []
     for elemento in puntajes:
         nombrePuntos = elemento # Recibe cada elemento de la lista, mas abajo los separa en dos variables distintas de nombre y puntos

@@ -3,7 +3,7 @@ import tablero
 import funcionesbd
 import sys
 
-def cerrarPartida(): # Cierra el programa. Se invoca sólo si al ganar con generala servida se elige la opcion salir.
+def cerrarPartida(): # Cierra el programa cuando el usuario lo desea o si finaliza la partida.
     sys.exit()
 
 # Esta es la versión extendida que pregunta si se desea continuar la partida
@@ -33,7 +33,7 @@ def continuarPartida(idPartida):
             borrar = input("\nPresione -> 1 para BORRAR y SALIR\nPresione -> 2 para VOLVER ATRÁS: ")
         if borrar == "1": # borra la partida y sale del programa
             funcionesbd.borrarPartida(idPartida)
-            print("Muchas gracias por jugar! Vuelva pronto!")
+            print("Partida borrada CORRECTAMENTE!.\nMuchas gracias por jugar! Vuelva pronto!")
             sys.exit()
         elif borrar == "2": # vuelve a preguntar si desea continuar la partida
             preguntaCorta(idPartida)
@@ -64,8 +64,8 @@ def nuevaPartida():
     funcionesbd.nuevaPartida(nombrePartida)  # Inserta el nombre de partida, fecha y hora en la tabla Partida de la BD
     funcionesbd.ingresoApuntajes(jugadores, nombrePartida) # Inserta los anteriores datos en la tabla Puntajes de la BD
     idPartida = funcionesbd.buscarIdPartida(nombrePartida) # Busca el ID_PARTIDA asociado a la nueva partida en la BD
-    print('\n> Los datos fueron ingresados Correctamente!\n>La partida fue guardada con el Nombre>',nombrePartida)
-    for turno in range(0,12): # Crea un ciclo de 11 Turnos
+    print('\n> Los datos fueron ingresados Correctamente!\n> La partida fue guardada con el Nombre >',nombrePartida)
+    for turno in range(0,11): # Crea un ciclo de 11 Turnos
         nroTurno = (turno + 1) # Variable asociada al nro de turno que se jugará
         print("\n------------------------ * TURNO NÚMERO ",str(turno+1), " * ------------------------\n")
         for a in range(0, cantidad): # Crea un ciclo que se repetirá según la cantidad de jugadores
@@ -82,7 +82,7 @@ def nuevaPartida():
             tiro.contadorTiradas =1  # regresa el valor del contador de tiradas a 1 para que el prox jugador arranque de cero
             print("")
             continuar = preguntaCorta(idPartida) # Pregunta si desea continuar la partida o guardar y salir.
-            if continuar == True:
+            if continuar == True: # Si la función anterior retorna True continúa con el ciclo, sino puede guardar la partida o salir
                 pass
         print("") # Se sale del ciclo de jugadores
         print("* Resultados Finales del Turno Nro",(turno+1),"*\n")
@@ -94,6 +94,7 @@ def nuevaPartida():
     puntajes = tablero.puntajesFinales(jugadores, tablero.puntajeParcial) # asocia la variable a una lista con tuplas dentro con el nombre de jugador y puntaje final
     tablero.clasificados(puestos, puntajes) # Finalmente imprime el podio de ganadores por órden, detectando empates.
     print("\nPartida finalizada. Muchas gracias por jugar!")
+    funcionesbd.borrarPartida(idPartida) # Al terminar la partida borra todos los datos de la BD de la partida terminada
     funcionesbd.cerrarBase()# Cierra la BD
 
 
@@ -141,6 +142,7 @@ def ejecutarReanudar(idPartida):
     puntajes = tablero.puntajesFinales(jugadores, tablero.puntajeParcial)
     tablero.clasificados(puestos,puntajes)
     print("\nPartida finalizada. Muchas gracias por jugar!")
+    funcionesbd.borrarPartida(idPartida)  # Al terminar la partida borra todos los datos de la BD de la partida terminada
     funcionesbd.cerrarBase()
 
 
@@ -148,12 +150,12 @@ def reanudarPartida(): #Muestra las partidas guardadas y permite elegir cual rea
     resultado = funcionesbd.buscarPartidaGuardada()
     if resultado == False: # Si no hay ninguna guardada devuelve ERROR y comienza el programa otra vez
         iniciarPrograma()
-    else: # Si eligio correctamente una partida asociara el idPartida a ella y la reanudara exitosamente
+    else: # Si eligio correctamente una partida asociara el idPartida a ella y la reanudará exitosamente
         idPartida = resultado
         ejecutarReanudar(idPartida)
 
 
-# Esta es la fun principal que llama a tdo el programa
+# Esta es la función principal que llama a tdo el programa
 def iniciarPrograma():
     print(">>> BIENVENIDO A LA GENERALA! <<<")
     print("Desea iniciar una partida nueva?\nIngrese:\n- 1 para iniciar una NUEVA partida.\n- 2 para REANUDAR una partida guardada.")

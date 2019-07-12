@@ -48,16 +48,18 @@ def aceptarTirada():
     print("\n*** Turno finalizado. Se ha quedado con los siguientes dados:")
     return dados
 
-# Ésta función HACE DEMASIADAS COSAS y hay que SIMPLIFICARLA
-# entre sus funciones hace lo siguiente:
+# Ésta función HACE DEMASIADAS COSAS y claramente hay que SIMPLIFICARLA
+# entre sus muchas funciones hace lo siguiente:
 # primero invoca las funciones de categorias y devuelve true si hay alguna categoria especial
 # luego analizando el contador de tiradas define si la categoria obtenida es servida o armada
-# si obtuvo alguna jugada especial da la opción de elegir quedarse con esa categoria especial,
+# si obtuvo alguna jugada especial da la opción de elegir quedarse o no con esa categoria especial,
 # anotarse puntos de la categoria números o tachar una categoria.
+# si el jugador obtiene una categoría que ya tiene anotada lo avisa y da la opcion de anotar numero o tachar
 # devuelve el puntaje correspondiente a lo que haya elegido
 # si el jugador no obtuvo ninguna jugada especial
 # podra elegir anotarse puntos de la categoria numeros o tachar una categoria.
 # finalmente RETORNA una TUPLA con los (puntos,categoria) obtenidos
+# tambien tiene las validaciones correspondientes en caso de errores de tipeo
 def definiciones(dados,idPuntaje):
     categorias.EsGenerala(dados)
     categorias.esEscalera(dados)
@@ -147,7 +149,7 @@ def definiciones(dados,idPuntaje):
             print("\n... Usted ya tiene esa categoría anotada!")
             anotar_NadaEspecial(idPuntaje)
     elif contadorTiradas > 1 and categorias.EsGenerala(dados) == True and funcionesbd.buscarGeneralaIngresada(idPuntaje) == 50:
-        categoria = "GD"
+        categoria = "GD" # Si el contadorTiradas es 1 (es servida) la generala es True y la Generala YA FUE OBTENIDA se detecta la GD
         catIng = funcionesbd.buscarCatIng(idPuntaje, categoria)
         print("Obtuvo GENERALA DOBLE: ", dados)
         if catIng == True:
@@ -252,20 +254,16 @@ def anotar_NadaEspecial(idPuntaje):
                 if numIng == True :
                     categoria = valor
                     puntos = 0
-                    #print("\nTachaste la categoría correctamente.")
                 else :
                     print("*** ERROR. La categoría ingresada ya fue obtenida anteriormente.")
                     print(opciones)
                     opcion = str(input("\nIngrese su elección: "))
                     valor = ref_tachar.get(opcion)
                     categoria = valor
-                #puntos = 0
-                #print("Tachaste la categoria correctamente!")
             while type(categoria) == str and catIng == False:
                 catIng = funcionesbd.buscarCatIng(idPuntaje,categoria)
                 if catIng == True :
                     puntos = 0
-                    #print("\nTachaste la categoría correctamente.")
                 else :
                     print("*** ERROR. La categoría ingresada ya fue obtenida anteriormente.")
                     print(opciones)
@@ -344,7 +342,7 @@ def modificarDados():
 # Estan contenidas en ese diccionario para poder realizar la validacion si el usuario
 # comete un error al escribir.
 # Termina RETORNANDO la lista de dados obtenida al aceptar anotar la tirada invocando
-# a la función (definiciones(dados)) para definir que puntuación anotará el tablero
+# a la función (definiciones(dados)) para definir qué puntuación anotará el tablero
 def programa_principal(idPuntaje):
     ref_opciones = {"T": aceptarTirada, "V": tirarTodoNuevo, "E": modificarDados, "P": '' }
     print("\n*** La tirada número",contadorTiradas,"obtuvo los siguientes dados:\n",tirar_dados(dados))
